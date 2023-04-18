@@ -1,61 +1,4 @@
-# AZF_Zip_sharepoint_automation
- 
-## Automation Task Summary
-
-1. Create a connection to database
-2. Query & get the folder path from DB for ticket_upload_status = Ready if Exists
-3. For condition No, Abort the process      
-4. For condition Yes
-    - Create a dataframe
-    - Get all the unique folder path in an array & perform loop operation
-    - connect to Sharepoint
-        - Ensure folder path is available
-        - get the list of files exist on the folder
-        - firstly, check if there is any PDF files are available
-        - If No, abort the process
-        - If yes,
-            - Now check if are no ZIP file available on the folder
-            - If No, abort the process
-            - If Yes
-                - start compress/add all the PDF files into the ZIP files
-                - Write & store it on the memory
-                - Now delimit the sharepoint folder path with "/" and get the name after the value "Truck/Ocean" [shipping condition] 
-                    to save the Zip file on the folder based on the condition
-                    - If Truck, then save the zip file with a name PO_number.zip
-                    - If Ocean, then save the Zip file with a name Booking_number.zip
-
-## Procedure
-
-1. First initialize the application varibles in application settings of function app in azure portal.
-[**How to set Environment Variables in Azure Functions**](https://iotespresso.com/how-to-set-environment-variables-in-azure-functions/)
-
-
-2. All third party python libraries can be defined in `requirement.txt` file to include into your environment. 
-
-```txt
-azure-functions
-pandas
-pyodbc
-fast_to_sql
-azure-storage-blob
-Office365-REST-Python-Client
-Python-dotenv
-```
-
-| Packages                     | official Documentation                                 |
-|------------------------------|--------------------------------------------------------|
-| azure-functions              | https://pypi.org/project/azure-functions/              |
-| pandas                       | https://pypi.org/project/pandas/                       |
-| pyodbc                       | https://pypi.org/project/pyodbc/                       |
-| fast_to_sql                  | https://pypi.org/project/fast-to-sql/                  |
-| azure-storage-blob           | https://pypi.org/project/azure-storage-blob/           |
-| office365-REST-Python-Client | https://pypi.org/project/Office365-REST-Python-Client/ |
-| pip install python-dotenv    | https://pypi.org/project/python-dotenv/                |
-
-  After defining those packages you can import in your python code.
-  
-  ```python
-import datetime 
+import datetime
 import logging
 import azure.functions as func
 #Dotenv Libraries
@@ -76,12 +19,8 @@ from office365.runtime.auth.user_credential import UserCredential
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
-  ```
 
-  Here is the main function of our Python code. **Call all your application varibles in your main function using os.environ[' ']**
-  
-  ```python
-  def main(mytimer: func.TimerRequest) -> None:
+def main(mytimer: func.TimerRequest) -> None:
     utc_timestamp = datetime.datetime.utcnow().replace(
         tzinfo=datetime.timezone.utc).isoformat()
 
@@ -177,29 +116,3 @@ warnings.filterwarnings("ignore", category=UserWarning)
         logging.info("Database is not connected. please check the connection")
 
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
-    
-  ```
-
-2. After you test your function select "Deploy to Function App" to publish your local Azure funtion app to Azure Functions App.
-
-![](Screenshots/Deploy.png)
-
-3. Finally, the azure timertrigger function app run for every day at 5 AM [**Cron Generator**](https://crontab.guru/#*_*_*_*) and automatically save ZIP file from on the sharepoint folder.
-
-**Output**
-
-![](Screenshots/Output.png)
-
-## Materials
-
-* [Taking a closer look at Python support for Azure Functions](https://azure.microsoft.com/en-us/blog/taking-a-closer-look-at-python-support-for-azure-functions)
-* More details about [Azure Functions for Visual Studio Code (Preview)
-](https://github.com/Microsoft/vscode-azurefunctions)
-* More details about [Create your first Python function in Azure (Preview)
-](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-python)
-* More details about [Timer trigger for Azure Functions using python (Preview)
-](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer)
-* [Cron generator for timertrigger](https://crontab.guru/#*_*_*_*)
-
-Thanks & Regards
-Harihara Ganesh
