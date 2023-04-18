@@ -201,5 +201,4 @@ warnings.filterwarnings("ignore", category=UserWarning)
 ](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer)
 * [Cron generator for timertrigger](https://crontab.guru/#*_*_*_*)
 
-Thanks & Regards
-Harihara Ganesh
+Thanks!!
